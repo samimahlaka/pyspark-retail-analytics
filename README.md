@@ -1,21 +1,32 @@
-# PySpark Retail Analytics
+# Retail Analytics with PySpark
 
-A data engineering project using PySpark to process and analyze 1 million retail transactions.
+This project analyzes retail transaction data using PySpark.
 
-## Tech Stack
+## What the project does
 
-- PySpark
-- Python
-- Parquet
-- Git
-- GitHub
+- Loads retail transaction data
+- Cleans and prepares the dataset
+- Creates analytics using PySpark DataFrame API
+- Creates analytics using Spark SQL
+- Saves results as Parquet files
 
-## Dataset
+## Analytics created
 
-Retail Transactions Dataset (1M records)
+### City Revenue
+Shows total revenue grouped by city.
 
-## Current Features
+### Top Products
+Shows products ranked by total revenue.
 
-- Load CSV using PySpark
-- Schema inference
-- Data exploration
+### KPI Summary
+Shows:
+- total transactions
+- total revenue
+- average transaction value
+
+## Output folders
+
+DataFrame API outputs:
+
+```text
+output/analytics/
