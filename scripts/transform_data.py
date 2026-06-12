@@ -45,6 +45,44 @@ product_revenue = (
 
 
 
+clean_df.createOrReplaceTempView("transactions")
+
+city_revenue_sql = spark.sql(
+    """
+    SELECT City,SUM(Total_Cost) as revenue_by_city
+    FROM transactions
+    GROUP BY City
+    ORDER BY revenue_by_city DESC
+    """
+)
+
+top_products_sql = spark.sql(
+    """
+    SELECT Product, sum(Total_Cost) as revenue_by_product
+    From transactions
+    Group By Product
+    Order by revenue_by_product DESC
+    
+    """
+)
+
+kpi_sql = spark.sql(
+    """
+    SELECT 
+        Count(*) as total_transactions, 
+        SUM(Total_Cost) as total_revenue, 
+        AVG(Total_Cost) as average_transaction_value
+    From transactions
+    """)
+    
+
+
+clean_df.write.mode('overwrite').parquet('output/retail_transactions_cleaned')
+city_revenue.write.mode("overwrite").parquet("output/analytics/city_revenue")
+store_revenue.write.mode("overwrite").parquet("output/analytics/store_revenue")
+customer_category_revenue.write.mode("overwrite").parquet("output/analytics/customer_category_revenue")
+product_revenue.write.mode("overwrite").parquet("output/analytics/product_revenue")
+kpi_sql.write.mode("overwrite").parquet("output/analytics/kpi")
 
 print(f'Total Original Rows : {df.count()}')
 print(f'Cleaned Rows : {clean_df.count()}')
@@ -55,15 +93,15 @@ city_revenue.show(10)
 store_revenue.show(20)
 customer_category_revenue.show(20)
 product_revenue.show(20)
-
-
-# Revenue by Paymen Method
-
-
 payment_revenue.show(20)
+kpi_sql.show()
 
 
-clean_df.write.mode('overwrite').parquet('output/retail_transactions_cleaned')
+print("City Revenue Partitions:", city_revenue.rdd.getNumPartitions())
+print("Product Revenue Partitions:", product_revenue.rdd.getNumPartitions())
+
+
+
 
 spark.stop()
 
